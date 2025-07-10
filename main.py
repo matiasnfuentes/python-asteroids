@@ -11,6 +11,7 @@ from shot import Shot
 def main():
     pygame.init()
     pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.display.set_caption("Asteroids")
 
     print("Starting Asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
@@ -42,13 +43,14 @@ def game_loop(updatable, drawable, asteroids, shots):
 
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroid_field = AsteroidField(asteroids)
+    background = pygame.image.load("./assets/images/background.png").convert()
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
 
-        screen.fill("black")
+        screen.blit(background, (0, 0))
         updatable.update(dt)
 
         for asteroid in asteroids:
