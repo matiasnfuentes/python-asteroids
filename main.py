@@ -5,6 +5,7 @@ from asteroidfield import AsteroidField
 from constants import *
 from life import Life
 from player import Player
+from score import Score
 from shot import Shot
 
 
@@ -32,6 +33,7 @@ def create_containers():
     AsteroidField.containers = updatable
     Shot.containers = (updatable, drawable, shots)
     Player.containers = (updatable, drawable)
+    Score.containers = (updatable, drawable)
 
     return updatable, drawable, asteroids, shots
 
@@ -44,6 +46,7 @@ def game_loop(updatable, drawable, asteroids, shots):
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroid_field = AsteroidField(asteroids)
     background = pygame.image.load("./assets/images/background.png").convert()
+    score = Score(SCREEN_WIDTH - 250, 20)
 
     while True:
         for event in pygame.event.get():
@@ -63,6 +66,7 @@ def game_loop(updatable, drawable, asteroids, shots):
                 if asteroid.is_colliding(shot):
                     shot.kill()
                     asteroid.split()
+                    score.increase()
 
         for unit in drawable:
             unit.draw(screen)
