@@ -9,7 +9,7 @@ class Life(pygame.sprite.Sprite):
         else:
             super().__init__()
 
-        original_image = pygame.image.load("./assets/images/life.png")
+        original_image = pygame.image.load("../assets/images/life.png")
         self.image = pygame.transform.scale(original_image, (40, 40)).convert_alpha()
         self.rect = self.image.get_rect(topleft=(x, y))
 

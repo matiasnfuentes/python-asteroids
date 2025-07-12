@@ -3,6 +3,8 @@ from circleshape import CircleShape
 from constants import ASTEROID_MIN_RADIUS, ASTEROID_WIDTH
 import random
 
+from explosion import ExplosionEffect
+
 
 class Asteroid(CircleShape):
     def __init__(self, x, y, radius):
@@ -13,11 +15,12 @@ class Asteroid(CircleShape):
 
     def update(self, dt):
         self.position += self.velocity * dt
-    
+
     def split(self):
         self.kill()
-        
+
         if self.radius <= ASTEROID_MIN_RADIUS:
+            ExplosionEffect(self.position)
             return
 
         angle = random.uniform(20, 50)

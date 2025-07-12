@@ -3,6 +3,7 @@ import pygame
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from constants import *
+from explosion import ExplosionEffect, Particle
 from life import Life
 from player import Player
 from score import Score
@@ -34,6 +35,8 @@ def create_containers():
     Shot.containers = (updatable, drawable, shots)
     Player.containers = (updatable, drawable)
     Score.containers = (updatable, drawable)
+    ExplosionEffect.containers = (updatable, drawable)
+    Particle.containers = (updatable, drawable)
 
     return updatable, drawable, asteroids, shots
 
@@ -45,7 +48,7 @@ def game_loop(updatable, drawable, asteroids, shots):
 
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroid_field = AsteroidField(asteroids)
-    background = pygame.image.load("./assets/images/background.png").convert()
+    background = pygame.image.load("../assets/images/background.png").convert()
     score = Score(SCREEN_WIDTH - 250, 20)
 
     while True:
