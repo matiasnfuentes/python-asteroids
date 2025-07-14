@@ -16,10 +16,10 @@ class Asteroid(CircleShape):
     def update(self, dt):
         self.position += self.velocity * dt
 
-    def split(self):
+    def split(self, should_explode=False):
         self.kill()
 
-        if self.radius <= ASTEROID_MIN_RADIUS:
+        if self.radius <= ASTEROID_MIN_RADIUS or should_explode:
             ExplosionEffect(self.position)
             return
 
