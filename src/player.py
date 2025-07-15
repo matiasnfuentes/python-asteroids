@@ -21,6 +21,17 @@ class Player(CircleShape):
         self.rotation = 0
         self.shoot_cooldown = 0
         self.lives = [Life(10, 10), Life(40, 10), Life(70, 10)]
+        self.speed = PLAYER_SPEED
+
+    def get_speed(self):
+        return self.speed
+
+    def set_speed(self, speed):
+        self.speed = speed
+
+    def reset_attributes(self):
+        self.speed = PLAYER_SPEED
+        self.position = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -38,7 +49,7 @@ class Player(CircleShape):
 
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        self.position += forward * PLAYER_SPEED * dt
+        self.position += forward * self.speed * dt
 
     def update(self, dt):
         self.shoot_cooldown -= dt
@@ -68,5 +79,5 @@ class Player(CircleShape):
             print("Game over!")
             sys.exit()
 
+        self.reset_attributes()
         self.lives.pop().kill()
-        self.position = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)

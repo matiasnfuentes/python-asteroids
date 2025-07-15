@@ -3,7 +3,9 @@ import pygame
 import random
 from asteroid import Asteroid
 from constants import *
-from shield import Shield
+from power_ups.power_up import PowerUp
+from power_ups.shield import Shield
+from power_ups.speed_boost import SpeedBoost
 
 
 class AsteroidField(pygame.sprite.Sprite):
@@ -30,25 +32,17 @@ class AsteroidField(pygame.sprite.Sprite):
         ],
     ]
 
+    power_ups = [Shield, SpeedBoost]
+
     def __init__(self, asteroids_group):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.asteroid_spawn_timer = 0.0
-        self.shield_spawn_timer = 0.0
+        self.power_up_spawn_timer = 0.0
         self.asteroids_group = asteroids_group
-
-    def spawn(self, entity_type, position, velocity, radius=1):
-        new_entity = None
-
-        if entity_type == EntityType.ASTEROID:
-            new_entity = Asteroid(position.x, position.y, radius)
-        elif entity_type == EntityType.SHIELD:
-            new_entity = Shield(position.x, position.y)
-
-        new_entity.velocity = velocity
 
     def update_spawn_timers(self, dt):
         self.asteroid_spawn_timer += dt
-        self.shield_spawn_timer += dt
+        self.power_up_spawn_timer += dt
 
     def get_radom_position_and_velocity(self):
         edge = random.choice(self.edges)
@@ -56,28 +50,39 @@ class AsteroidField(pygame.sprite.Sprite):
         velocity = edge[0] * speed
         velocity = velocity.rotate(random.randint(-30, 30))
         position = edge[1](random.uniform(0, 1))
+
         return position, velocity
+
+    def spawn(self, entity_type):
+        new_entity = None
+        position, velocity = self.get_radom_position_and_velocity()
+
+        if entity_type == EntityType.ASTEROID:
+            self.asteroid_spawn_timer = 0.0
+            kind = random.randint(1, ASTEROID_KINDS)
+            radius = ASTEROID_MIN_RADIUS * kind
+            new_entity = Asteroid(position.x, position.y, radius)
+
+        elif entity_type == EntityType.POWER_UP:
+            self.power_up_spawn_timer = 0.0
+            power_up = random.choice(self.power_ups)
+            new_entity = power_up(position.x, position.y)
+
+        new_entity.velocity = velocity
 
     def update(self, dt):
         self.update_spawn_timers(dt)
 
         # spawn a new asteroid at a random edge
         if self.asteroid_spawn_timer > ASTEROID_SPAWN_RATE:
-            self.asteroid_spawn_timer = 0.0
-            position, velocity = self.get_radom_position_and_velocity()
-            kind = random.randint(1, ASTEROID_KINDS)
-            self.spawn(
-                EntityType.ASTEROID,
-                position,
-                velocity,
-                ASTEROID_MIN_RADIUS * kind,
-            )
+            self.spawn(EntityType.ASTEROID)
 
         # spawn a new shield at a random edge only if there's no shield in the field
-        if self.shield_spawn_timer > 1 and Shield.can_spawn_shield:
-            self.shield_spawn_timer = 0.0
-            position, velocity = self.get_radom_position_and_velocity()
-            self.spawn(EntityType.SHIELD, position, velocity)
+        if (
+            self.power_up_spawn_timer > POWER_UP_SPAWN_RATE
+            and PowerUp.can_spawn_power_up
+        ):
+            self.spawn(EntityType.POWER_UP)
 
     def clean_field(self):
         for asteroid in self.asteroids_group:
@@ -86,4 +91,4 @@ class AsteroidField(pygame.sprite.Sprite):
 
 class EntityType(Enum):
     ASTEROID = auto()
-    SHIELD = auto()
+    POWER_UP = auto()
