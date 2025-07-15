@@ -1,7 +1,5 @@
-from constants import SPEED_BOOST
 from power_ups.power_up import PowerUp
 from shooting_strategies.simple_shot import SimpleShot
-from shooting_strategies.triple_shot import TripleShot as TripleShotStrategy
 
 
 class ShootingPowerUp(PowerUp):

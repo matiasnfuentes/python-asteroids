@@ -11,7 +11,6 @@ import pygame
 
 from life import Life
 from shooting_strategies.simple_shot import SimpleShot
-from shot import Shot
 
 
 class Player(CircleShape):

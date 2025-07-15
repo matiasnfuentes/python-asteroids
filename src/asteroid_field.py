@@ -2,7 +2,15 @@ from enum import Enum, auto
 import pygame
 import random
 from asteroid import Asteroid
-from constants import *
+from constants import (
+    ASTEROID_KINDS,
+    ASTEROID_MAX_RADIUS,
+    ASTEROID_MIN_RADIUS,
+    ASTEROID_SPAWN_RATE,
+    POWER_UP_SPAWN_RATE,
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
+)
 from power_ups.machine_gun import MachineGun
 from power_ups.power_up import PowerUp
 from power_ups.shield import Shield
