@@ -2,8 +2,6 @@ import sys
 from circleshape import CircleShape
 from constants import (
     PLAYER_RADIUS,
-    PLAYER_SHOOT_COOLDOWN,
-    PLAYER_SHOOT_SPEED,
     PLAYER_SPEED,
     PLAYER_TURN_SPEED,
     SCREEN_HEIGHT,
@@ -12,6 +10,7 @@ from constants import (
 import pygame
 
 from life import Life
+from shooting_strategies.simple_shot import SimpleShot
 from shot import Shot
 
 
@@ -19,7 +18,7 @@ class Player(CircleShape):
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
-        self.shoot_cooldown = 0
+        self.shooting_strategy = SimpleShot()
         self.lives = [Life(10, 10), Life(40, 10), Life(70, 10)]
         self.speed = PLAYER_SPEED
 
@@ -28,6 +27,9 @@ class Player(CircleShape):
 
     def set_speed(self, speed):
         self.speed = speed
+
+    def set_shooting_strategy(self, shooting_strategy):
+        self.shooting_strategy = shooting_strategy
 
     def reset_attributes(self):
         self.speed = PLAYER_SPEED
@@ -52,7 +54,7 @@ class Player(CircleShape):
         self.position += forward * self.speed * dt
 
     def update(self, dt):
-        self.shoot_cooldown -= dt
+        self.shooting_strategy.update(dt)
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:
@@ -67,12 +69,7 @@ class Player(CircleShape):
             self.shoot()
 
     def shoot(self):
-        if self.shoot_cooldown > 0:
-            return
-
-        shot = Shot(self.position.x, self.position.y)
-        shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
-        self.shoot_cooldown = PLAYER_SHOOT_COOLDOWN
+        self.shooting_strategy.shoot(self.position, self.rotation)
 
     def lose_life(self):
         if len(self.lives) <= 1:

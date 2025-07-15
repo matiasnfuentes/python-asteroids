@@ -3,9 +3,11 @@ import pygame
 import random
 from asteroid import Asteroid
 from constants import *
+from power_ups.machine_gun import MachineGun
 from power_ups.power_up import PowerUp
 from power_ups.shield import Shield
 from power_ups.speed_boost import SpeedBoost
+from power_ups.triple_shot import TripleShot
 
 
 class AsteroidField(pygame.sprite.Sprite):
@@ -32,7 +34,7 @@ class AsteroidField(pygame.sprite.Sprite):
         ],
     ]
 
-    power_ups = [Shield, SpeedBoost]
+    power_ups = [Shield, SpeedBoost, TripleShot, MachineGun]
 
     def __init__(self, asteroids_group):
         pygame.sprite.Sprite.__init__(self, self.containers)
@@ -77,7 +79,7 @@ class AsteroidField(pygame.sprite.Sprite):
         if self.asteroid_spawn_timer > ASTEROID_SPAWN_RATE:
             self.spawn(EntityType.ASTEROID)
 
-        # spawn a new shield at a random edge only if there's no shield in the field
+        # spawn a new power-up at a random edge only if there's no power-up in the field
         if (
             self.power_up_spawn_timer > POWER_UP_SPAWN_RATE
             and PowerUp.can_spawn_power_up

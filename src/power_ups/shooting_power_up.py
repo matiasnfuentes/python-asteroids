@@ -1,18 +1,20 @@
 from constants import SPEED_BOOST
 from power_ups.power_up import PowerUp
+from shooting_strategies.simple_shot import SimpleShot
+from shooting_strategies.triple_shot import TripleShot as TripleShotStrategy
 
 
-class SpeedBoost(PowerUp):
+class ShootingPowerUp(PowerUp):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.set_sprite("../assets/images/speed_power_up.png")
+        self.strategy = SimpleShot()
 
     def set_player(self, player):
         if self.player is None:
             super().set_player(player)
-            self.player.set_speed(player.get_speed() * SPEED_BOOST)
+            player.set_shooting_strategy(self.strategy)
 
     def destroy(self):
         if self.player is not None:
-            self.player.set_speed(self.player.get_speed() / SPEED_BOOST)
+            self.player.set_shooting_strategy(SimpleShot())
         super().destroy()
