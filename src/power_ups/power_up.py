@@ -24,13 +24,13 @@ class PowerUp(CircleShape):
         if self.player is None:
             screen.blit(self.sprite, self.sprite.get_rect(center=self.position))
 
-    def update(self, dt, update_with_player=None):
+    def update(self, dt):
         if self.position.x < 0 or self.position.y < 0:
             self.destroy()
             return
 
         if self.player is None:
-            self.position += self.velocity * dt
+            super().update(dt)
             return
 
         if self.duration > 0:

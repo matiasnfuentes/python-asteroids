@@ -52,6 +52,18 @@ class Player(CircleShape):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * self.speed * dt
 
+        # Wrap position horizontally
+        if self.position.x < 0:
+            self.position.x += SCREEN_WIDTH
+        elif self.position.x > SCREEN_WIDTH:
+            self.position.x -= SCREEN_WIDTH
+
+        # Wrap position vertically
+        if self.position.y < 0:
+            self.position.y += SCREEN_HEIGHT
+        elif self.position.y > SCREEN_HEIGHT:
+            self.position.y -= SCREEN_HEIGHT
+
     def update(self, dt):
         self.shooting_strategy.update(dt)
         keys = pygame.key.get_pressed()

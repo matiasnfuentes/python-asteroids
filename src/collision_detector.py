@@ -13,7 +13,7 @@ class CollisionDetector:
     def detect_collisions(self):
         # There's only 1 power_ups per game at the same moment
         power_up = next(iter(self.power_ups), None)
-        if power_up is not None and power_up.is_colliding(self.player):
+        if power_up and power_up.is_colliding(self.player):
             power_up.set_player(self.player)
 
         for asteroid in self.asteroids:
@@ -25,7 +25,7 @@ class CollisionDetector:
             if asteroid.is_colliding(self.player):
                 self.player.lose_life()
                 self.asteroid_field.clean_field()
-                if power_up is not None:
+                if power_up:
                     power_up.destroy()
                 break  # Stop checking after player collision
 
