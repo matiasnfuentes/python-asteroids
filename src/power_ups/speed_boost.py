@@ -10,9 +10,14 @@ class SpeedBoost(PowerUp):
     def set_player(self, player):
         if self.player is None:
             super().set_player(player)
-            self.player.set_speed(player.get_speed() * SPEED_BOOST)
+            self.boost_player_values(True)
 
     def destroy(self):
         if self.player is not None:
-            self.player.set_speed(self.player.get_speed() / SPEED_BOOST)
+            self.boost_player_values(False)
         super().destroy()
+
+    def boost_player_values(self, boost: bool):
+        factor = SPEED_BOOST if boost else 1 / SPEED_BOOST
+        self.player.max_speed *= factor
+        self.player.acceleration *= factor
