@@ -101,3 +101,26 @@ class Player(CircleShape):
 
         self.reset_attributes()
         self.lives.pop().kill()
+
+    def get_mask(self):
+        size = int(self.radius * 2)
+        surface = pygame.Surface((size, size), pygame.SRCALPHA)
+
+        # Get world-space triangle points
+        world_points = self.triangle()
+
+        # Convert points to local surface coordinates
+        local_points = [
+            (
+                point.x - (self.position.x - self.radius),
+                point.y - (self.position.y - self.radius),
+            )
+            for point in world_points
+        ]
+
+        # Draw triangle to surface
+        pygame.draw.polygon(surface, (255, 255, 255), local_points)
+
+        mask = pygame.mask.from_surface(surface)
+
+        return mask, (self.position.x - self.radius, self.position.y - self.radius)
